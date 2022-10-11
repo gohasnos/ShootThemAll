@@ -33,22 +33,34 @@ pygame.mixer.music.load(os.path.join(snd_folder, 'tgfcoder-FrozenJam-SeamlessLoo
 pygame.mixer.music.set_volume(0.4)
 
 #СПРАЙТЫ
+
+#фон
 background = pygame.image.load(os.path.join(img_folder, 'space1.png'))
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 background_rect = background.get_rect()
 
+# корабль игрока
 player_img = pygame.image.load(os.path.join(img_folder, 'ship5.png'))
 player_mini_img = pygame.transform.scale(player_img, (25, 19))
 player_mini_img.set_colorkey(BLACK)
 
+# корабль второго игрока
 player2_img = pygame.image.load(os.path.join(img_folder, 'ship1.png'))
-mob_img = pygame.image.load(os.path.join(img_folder, 'laserRed12.png'))
 
+# мобы
+# mob_img = pygame.image.load(os.path.join(img_folder, 'laserRed12.png'))
+mob_img = pygame.image.load(os.path.join(img_folder, 'meteor4.png'))
+mob_img = pygame.transform.scale(mob_img, (48, 48))
+
+# пуля
 bullet_img = pygame.image.load(os.path.join(img_folder, 'laserGreen09.png'))
 
+#бустеры
 powerup_images = {'shield': pygame.image.load(os.path.join(img_folder, 'shield_gold.png')),
                   'gun': pygame.image.load(os.path.join(img_folder, 'bolt_gold.png'))}
 
+
+# взрывы
 explosion_anim = {'lg': [], 'sm': [], 'player': []}
 
 for i in range(9):
@@ -66,7 +78,7 @@ for i in range(9):
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 # DISPLAYSURF = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-pygame.display.set_caption("My Game")
+pygame.display.set_caption("Shoot them all")
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 bullets = pygame.sprite.Group()

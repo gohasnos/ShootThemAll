@@ -46,7 +46,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom = HEIGHT
 
         # показать, если скрыто
-        if self.hidden and (pygame.time.get_ticks() - self.hide_timer > 300000):
+        if self.hidden and (pygame.time.get_ticks() - self.hide_timer > 300000000):
             self.hidden = False
             self.rect.centerx = WIDTH / 2
             self.rect.bottom = HEIGHT - 10
