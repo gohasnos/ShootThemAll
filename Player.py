@@ -19,6 +19,8 @@ class Player(pygame.sprite.Sprite):
         self.lives = 3
         self.hidden = False
         self.hide_timer = pygame.time.get_ticks()
+        self.power = 1
+        self.power_time = pygame.time.get_ticks()
 
     def update(self):
         self.speedx = 0
@@ -51,14 +53,35 @@ class Player(pygame.sprite.Sprite):
             self.rect.centerx = WIDTH / 2
             self.rect.bottom = HEIGHT - 10
 
+        # тайм-аут для бонусов
+        if self.power >= 2 and pygame.time.get_ticks() - self.power_time > POWERUP_TIME:
+            self.power -= 1
+            self.power_time = pygame.time.get_ticks()
+
     def shoot(self):
-        bullet = Bullet(self.rect.centerx, self.rect.top)
-        all_sprites.add(bullet)
-        bullets.add(bullet)
-        shoot_sound.play()
+        # now = pygame.time.get_ticks()
+        # if now - self.last_shot > self.shoot_delay:
+        #     self.last_shot = now
+        if self.power == 1:
+            bullet = Bullet(self.rect.centerx, self.rect.top)
+            all_sprites.add(bullet)
+            bullets.add(bullet)
+            shoot_sound.play()
+        if self.power >= 2:
+            bullet1 = Bullet(self.rect.left, self.rect.centery)
+            bullet2 = Bullet(self.rect.right, self.rect.centery)
+            all_sprites.add(bullet1)
+            all_sprites.add(bullet2)
+            bullets.add(bullet1)
+            bullets.add(bullet2)
+            shoot_sound.play()
 
     def hide(self):
         # временно скрыть игрока
         self.hidden = True
         self.hide_timer = pygame.time.get_ticks()
         self.rect.center = (WIDTH / 2, HEIGHT + 200)
+
+    def powerup(self):
+        self.power += 1
+        self.power_time = pygame.time.get_ticks()

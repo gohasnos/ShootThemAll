@@ -11,6 +11,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 mob_number = 8
+POWERUP_TIME = 5000
 
 pygame.init()
 pygame.mixer.init()  # для звука
@@ -83,3 +84,4 @@ clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
 mobs = pygame.sprite.Group()
+powerups = pygame.sprite.Group()
