@@ -12,9 +12,16 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 mob_number = 8
 POWERUP_TIME = 5000
+POWERUP_COLLDOWN = 8000
 
 pygame.init()
-pygame.mixer.init()  # для звука
+
+# для звука
+pygame.mixer.init()
+
+font_name = pygame.font.match_font('arial')
+
+current_powerup_time = pygame.time.get_ticks()
 
 # настройка папки ассетов
 game_folder = os.path.dirname(__file__)
@@ -23,7 +30,7 @@ snd_folder = os.path.join(game_folder, 'snd')
 
 # Загрузка всей игровой графики и музыки
 
-#ЗВУКИ
+# ЗВУКИ
 shoot_sound = pygame.mixer.Sound(os.path.join(snd_folder, 'pew.wav'))
 expl_sounds = []
 for snd in ['expl3.wav', 'expl6.wav']:
@@ -32,10 +39,13 @@ death_sound = pygame.mixer.Sound(os.path.join(snd_folder, 'expl1.wav'))
 player_hit_sound = pygame.mixer.Sound(os.path.join(snd_folder, 'expl2.wav'))
 pygame.mixer.music.load(os.path.join(snd_folder, 'tgfcoder-FrozenJam-SeamlessLoop.mp3'))
 pygame.mixer.music.set_volume(0.4)
+pygame.mixer.music.play(loops=-1)
+shield_sound = pygame.mixer.Sound(os.path.join(snd_folder, 'pow4.wav'))
+power_sound = pygame.mixer.Sound(os.path.join(snd_folder, 'pow5.wav'))
 
-#СПРАЙТЫ
+# СПРАЙТЫ
 
-#фон
+# фон
 background = pygame.image.load(os.path.join(img_folder, 'space1.png'))
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 background_rect = background.get_rect()
@@ -56,10 +66,9 @@ mob_img = pygame.transform.scale(mob_img, (48, 48))
 # пуля
 bullet_img = pygame.image.load(os.path.join(img_folder, 'laserGreen09.png'))
 
-#бустеры
+# бустеры
 powerup_images = {'shield': pygame.image.load(os.path.join(img_folder, 'shield_gold.png')),
                   'gun': pygame.image.load(os.path.join(img_folder, 'bolt_gold.png'))}
-
 
 # взрывы
 explosion_anim = {'lg': [], 'sm': [], 'player': []}
@@ -81,7 +90,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 # DISPLAYSURF = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption("Shoot them all")
 clock = pygame.time.Clock()
-all_sprites = pygame.sprite.Group()
-bullets = pygame.sprite.Group()
-mobs = pygame.sprite.Group()
-powerups = pygame.sprite.Group()
+# all_sprites = pygame.sprite.Group()
+# bullets = pygame.sprite.Group()
+# mobs = pygame.sprite.Group()
+# powerups = pygame.sprite.Group()

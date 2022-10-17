@@ -1,3 +1,4 @@
+import pygame
 from random import *
 from Player import *
 from Settings import *
@@ -39,21 +40,51 @@ def draw_lives(surf, x, y, lives, img):
         img_rect.y = y
         surf.blit(img, img_rect)
 
+def show_go_screen():
+    screen.blit(background, background_rect)
+    draw_text(screen, "SHMUP!", 64, WIDTH / 2, HEIGHT / 4)
+    draw_text(screen, "Arrow keys move, Space to fire", 22,
+              WIDTH / 2, HEIGHT / 2)
+    draw_text(screen, "Press a key to begin", 18, WIDTH / 2, HEIGHT * 3 / 4)
+    pygame.display.flip()
+    waiting = True
+    while waiting:
+        clock.tick(FPS)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYUP:
+                waiting = False
+
     # player2 = Player2()
     # all_sprites.add(player2)
 
 
-player = Player()
-all_sprites.add(player)
-for i in range(mob_number):
-    newmob()
-score = 0
-pygame.mixer.music.play(loops=-1)
-font_name = pygame.font.match_font('arial')
+# player = Player()
+# all_sprites.add(player)
+# current_powerup_time = pygame.time.get_ticks()
+# pygame.mixer.music.play(loops=-1)
+# font_name = pygame.font.match_font('arial')
 
 # Цикл игры
+game_over = True
 running = True
 while running:
+    if game_over:
+        show_go_screen()
+        game_over = False
+        all_sprites = pygame.sprite.Group()
+        bullets = pygame.sprite.Group()
+        mobs = pygame.sprite.Group()
+        powerups = pygame.sprite.Group()
+        player = Player()
+        all_sprites.add(player)
+        for i in range(mob_number):
+            newmob()
+        score = 0
+
+
+
     # держим цикл на правильной скорости
     clock.tick(FPS)
 
@@ -85,7 +116,7 @@ while running:
             player.shield = 100
     # Если игрок умер, игра окончена
     if player.lives == -1 and not death_explosion.alive():
-        running = False
+        game_over = True
     # Проверка, попала ли пуля в моба
     hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
     for hit in hits:
@@ -94,18 +125,24 @@ while running:
         expl = Explosion(hit.rect.center, 'lg')
         all_sprites.add(expl)
         if random.random() > 0.9:
-            pow = Pow(hit.rect.center)
-            all_sprites.add(pow)
-            powerups.add(pow)
+            current_time = pygame.time.get_ticks()
+            if current_time - current_powerup_time > POWERUP_COLLDOWN:
+                pow = Pow(hit.rect.center)
+                current_powerup_time = pygame.time.get_ticks()
+                all_sprites.add(pow)
+                powerups.add(pow)
+
         newmob()
     # Проверка столкновений игрока и улучшения
     hits = pygame.sprite.spritecollide(player, powerups, True)
     for hit in hits:
         if hit.type == 'shield':
+            shield_sound.play()
             player.shield += random.randrange(10, 30)
             if player.shield >= 100:
                 player.shield = 100
         if hit.type == 'gun':
+            power_sound.play()
             player.powerup()
 
     # Визуализация (сборка)

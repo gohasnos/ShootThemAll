@@ -2,6 +2,7 @@ from Settings import *
 from Bullet import *
 
 
+
 class Player(pygame.sprite.Sprite):
     step = 5
 
